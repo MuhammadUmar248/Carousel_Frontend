@@ -1,0 +1,40 @@
+.carousel-preview iframe::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-preview iframe {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Fade-in animation for success message */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Fade-out animation for success message */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-out {
+  animation: fadeOut 0.3s ease-out;
+}

@@ -1,46 +1,140 @@
-# Getting Started with Create React App
+# Instagram Carousel Generator Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React frontend for generating Instagram carousel posts using AI. This application connects to a FastAPI backend that uses Google Gemini to create carousel content and converts it into beautiful HTML slides.
+
+## Features
+
+- **Modern UI** - Beautiful gradient design with Tailwind CSS
+- **AI-Powered** - Integrates with Google Gemini via LangChain
+- **Carousel Preview** - Live preview of generated carousel slides
+- **Export Options** - Download as HTML or individual PNG images
+- **Real-time Loading** - Smooth loading states and error handling
+- **TypeScript** - Full type safety throughout the application
+
+## Prerequisites
+
+- Node.js 14+ 
+- FastAPI backend running on port 8000 (or configured via environment variable)
+
+## Getting Started
+
+### Installation
+
+1. Clone the repository and navigate to the frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` to match your backend URL:
+```
+REACT_APP_API_URL=http://localhost:8000
+```
+
+### Running the Application
+
+Start the development server:
+```bash
+npm start
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
+
+## Usage
+
+1. **Fill in the form** with your carousel details:
+   - Post title
+   - Account information (name, username, profile image)
+   - Description of the carousel content
+   - Number of slides (1-10)
+
+2. **Click "Generate Carousel"** to create your carousel using AI
+
+3. **Preview and download** the results:
+   - View the carousel in the built-in preview
+   - Download as HTML file
+   - Download individual slide images (if available)
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── CarouselForm.tsx      # Main form component
+│   └── CarouselPreview.tsx   # Preview and download component
+├── services/
+│   └── api.ts               # API service layer
+├── types/
+│   └── index.ts             # TypeScript type definitions
+├── App.tsx                  # Main application component
+└── index.css                # Global styles with Tailwind
+```
 
 ## Available Scripts
 
-In the project directory, you can run:
-
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Runs the app in development mode.
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode.
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Builds the app for production to the `build` folder.
 
 ### `npm run eject`
+**Note: this is a one-way operation.** Ejects from Create React App configuration.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## API Integration
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The frontend expects a FastAPI backend with the following endpoint:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+POST /generate-carousel
+Content-Type: application/json
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+{
+  "title": "string",
+  "account": {
+    "name": "string", 
+    "username": "string",
+    "image": "string (optional)"
+  },
+  "description": "string",
+  "slides": "number (1-10)"
+}
+```
 
-## Learn More
+Response:
+```json
+{
+  "html": "string",
+  "images": ["string"] (optional),
+  "success": "boolean",
+  "error": "string" (optional)
+}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Technologies Used
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Axios** - HTTP client
+- **Lucide React** - Icons
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
