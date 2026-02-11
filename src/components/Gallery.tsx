@@ -9,24 +9,15 @@ const Gallery: React.FC = () => {
   const [selectedCarousel, setSelectedCarousel] = useState<SavedCarousel | null>(null);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [validatingImages, setValidatingImages] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    const loadCarousels = async () => {
-      setLoading(true);
-      try {
-        const carousels = storageService.getCarousels();
+  const loadCarousels = async () => {
+    setLoading(true);
+    try {
+      const carousels = storageService.getCarousels();
         
         // Validate images for each carousel
         const validatedCarousels = await Promise.all(
           carousels.map(async (carousel) => {
-            // Skip validation if already validated recently
-            if (validatingImages.has(carousel.id)) {
-              return carousel;
-            }
-            
-            setValidatingImages(prev => new Set(prev).add(carousel.id));
-            
             try {
               const isValid = await storageService.validateImages(carousel.id);
               return { ...carousel, imagesValid: isValid };
@@ -45,8 +36,9 @@ const Gallery: React.FC = () => {
       }
     };
 
+  useEffect(() => {
     loadCarousels();
-  }, [validatingImages]);
+  }, []);
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();

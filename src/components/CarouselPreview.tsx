@@ -178,23 +178,6 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
   };
 
-  const getSlideContent = (slideIndex: number) => {
-    if (data.images && data.images.length > 0) {
-      // Show current image from Cloudinary
-      return `
-        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000;">
-          <img 
-            src="${data.images[slideIndex]}" 
-            alt="Slide ${slideIndex + 1}" 
-            style="max-width: 100%; max-height: 100%; object-fit: contain;"
-          />
-        </div>
-      `;
-    }
-    // Fallback to HTML if no images
-    return data.html || '';
-  };
-
   const totalSlides = data.images ? data.images.length : 1;
 
   if (!data.success) {
