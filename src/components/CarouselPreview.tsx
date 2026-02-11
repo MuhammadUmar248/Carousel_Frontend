@@ -178,8 +178,6 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
   };
 
-  const totalSlides = data.images ? data.images.length : 1;
-
   if (!data.success) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-xl p-6 max-w-2xl mx-auto">
