@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { SavedCarousel } from '../types';
 import { storageService } from '../services/storage';
-import { Eye, Download, Trash2, Calendar, User, Image as ImageIcon, Grid3X3 } from 'lucide-react';
+import { Trash2, Calendar, User, Image as ImageIcon, Grid3X3 } from 'lucide-react';
 import CarouselPreview from './CarouselPreview';
+import { SavedCarousel } from '../types';
 
 const Gallery: React.FC = () => {
   const [savedCarousels, setSavedCarousels] = useState<SavedCarousel[]>([]);
@@ -12,59 +12,41 @@ const Gallery: React.FC = () => {
   const [validatingImages, setValidatingImages] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    const loadCarousels = async () => {
+      setLoading(true);
+      try {
+        const carousels = storageService.getCarousels();
+        
+        // Validate images for each carousel
+        const validatedCarousels = await Promise.all(
+          carousels.map(async (carousel) => {
+            // Skip validation if already validated recently
+            if (validatingImages.has(carousel.id)) {
+              return carousel;
+            }
+            
+            setValidatingImages(prev => new Set(prev).add(carousel.id));
+            
+            try {
+              const isValid = await storageService.validateImages(carousel.id);
+              return { ...carousel, imagesValid: isValid };
+            } catch (error) {
+              console.error(`Failed to validate images for carousel ${carousel.id}:`, error);
+              return { ...carousel, imagesValid: false };
+            }
+          })
+        );
+        
+        setSavedCarousels(validatedCarousels);
+      } catch (error) {
+        console.error('Error loading carousels:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadCarousels();
   }, []);
-
-  const loadCarousels = async () => {
-    setLoading(true);
-    try {
-      const carousels = storageService.getCarousels();
-      
-      // Validate images for each carousel
-      const validatedCarousels = await Promise.all(
-        carousels.map(async (carousel) => {
-          // Skip validation if already validated recently
-          if (validatingImages.has(carousel.id)) {
-            return carousel;
-          }
-          
-          setValidatingImages(prev => new Set(prev).add(carousel.id));
-          
-          try {
-            const isValid = await storageService.validateImages(carousel.id);
-            setValidatingImages(prev => {
-              const newSet = new Set(prev);
-              newSet.delete(carousel.id);
-              return newSet;
-            });
-            
-            return {
-              ...carousel,
-              imagesValid: isValid
-            };
-          } catch (error) {
-            console.error('Error validating carousel:', carousel.id, error);
-            setValidatingImages(prev => {
-              const newSet = new Set(prev);
-              newSet.delete(carousel.id);
-              return newSet;
-            });
-            
-            return {
-              ...carousel,
-              imagesValid: false
-            };
-          }
-        })
-      );
-      
-      setSavedCarousels(validatedCarousels);
-    } catch (error) {
-      console.error('Error loading carousels:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -81,57 +63,6 @@ const Gallery: React.FC = () => {
 
   const handlePreview = (carousel: SavedCarousel) => {
     setSelectedCarousel(carousel);
-  };
-
-  const handleDownload = async (carousel: SavedCarousel, e: React.MouseEvent) => {
-    e.stopPropagation();
-    
-    // Download HTML if available
-    if (carousel.html) {
-      try {
-        // Try direct window.location approach
-        const a = document.createElement('a');
-        a.href = `data:text/html;charset=utf-8,${encodeURIComponent(carousel.html)}`;
-        a.download = `${carousel.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.html`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      } catch (error) {
-        console.error('Error downloading HTML:', error);
-        // Fallback: open in new tab
-        window.open(carousel.html, '_blank');
-      }
-    }
-    
-    // Download images if available
-    if (carousel.images && carousel.images.length > 0) {
-      try {
-        // Use: same robust approach as CarouselPreview
-        for (let index = 0; index < carousel.images.length; index++) {
-          const image = carousel.images[index];
-          
-          try {
-            // Try direct download approach
-            const a = document.createElement('a');
-            a.href = image;
-            a.download = `${carousel.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_slide_${index + 1}.png`;
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-            // Small delay between downloads
-            if (index < carousel.images.length - 1) {
-              await new Promise(resolve => setTimeout(resolve, 300));
-            }
-          } catch (imgError) {
-            console.error(`Error downloading image ${index + 1}:`, imgError);
-          }
-        }
-      } catch (error) {
-        console.error('Error downloading images:', error);
-      }
-    }
   };
 
   const formatDate = (dateString: string) => {

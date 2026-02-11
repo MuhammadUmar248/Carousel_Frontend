@@ -174,37 +174,21 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
   };
 
   const goToNextSlide = () => {
-    const totalSlides = data.images ? data.images.length : 1;
+    const totalSlides = data.images?.length || 1;
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
   };
 
-  const getCurrentSlideContent = () => {
+  const getSlideContent = (slideIndex: number) => {
     if (data.images && data.images.length > 0) {
       // Show current image from Cloudinary
       return `
-        <html>
-          <head>
-            <style>
-              body { 
-                margin: 0; 
-                padding: 0; 
-                display: flex; 
-                justify-content: center; 
-                align-items: center; 
-                min-height: 100vh; 
-                background: #000;
-              }
-              img { 
-                max-width: 100%; 
-                max-height: 100vh; 
-                object-fit: contain;
-              }
-            </style>
-          </head>
-          <body>
-            <img src="${data.images[currentSlide]}" alt="Slide ${currentSlide + 1}" />
-          </body>
-        </html>
+        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #000;">
+          <img 
+            src="${data.images[slideIndex]}" 
+            alt="Slide ${slideIndex + 1}" 
+            style="max-width: 100%; max-height: 100%; object-fit: contain;"
+          />
+        </div>
       `;
     }
     // Fallback to HTML if no images
