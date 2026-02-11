@@ -46,7 +46,7 @@ const Gallery: React.FC = () => {
     };
 
     loadCarousels();
-  }, []);
+  }, [validatingImages]);
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();

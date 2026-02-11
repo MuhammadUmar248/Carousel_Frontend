@@ -169,12 +169,12 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
   };
 
   const goToPreviousSlide = () => {
-    const totalSlides = data.images ? data.images.length : 1;
+    const totalSlides = (data.images && data.images.length > 0) ? data.images.length : 1;
     setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
   };
 
   const goToNextSlide = () => {
-    const totalSlides = data.images?.length || 1;
+    const totalSlides = (data.images && data.images.length > 0) ? data.images.length : 1;
     setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
   };
 
