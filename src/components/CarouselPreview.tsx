@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CarouselResponse } from '../types';
 import { Download, Eye, Share2, CheckCircle, ChevronLeft, ChevronRight, Square, CheckSquare, Trash2 } from 'lucide-react';
 import './CarouselPreview.css';
@@ -13,6 +13,8 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
   const [showSelection, setShowSelection] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(showSuccess);
+  const [imageLoadErrors, setImageLoadErrors] = useState<Set<number>>(new Set());
+  const [debugInfo, setDebugInfo] = useState<string>('');
 
   // Hide success message after 4 seconds
   React.useEffect(() => {
@@ -24,6 +26,19 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
       return () => clearTimeout(timer);
     }
   }, [showSuccess]);
+
+  // Debug logging for image issues
+  useEffect(() => {
+    if (data.images && data.images.length > 0) {
+      console.log('🖼️ Carousel Images:', data.images);
+      data.images.forEach((img, idx) => {
+        console.log(`  Slide ${idx + 1}:`, img?.substring(0, 100) + '...');
+      });
+    } else {
+      console.log('⚠️ No images in carousel data');
+    }
+    setDebugInfo(`Images: ${data.images?.length || 0}, Current: ${currentSlide + 1}`);
+  }, [data.images, currentSlide]);
 
   const handleDownloadAllImages = async () => {
     if (!data.images || data.images.length === 0) return;
@@ -254,6 +269,13 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
                     alt={`Slide ${currentSlide + 1}`}
                     className="max-w-full max-h-[600px] object-contain rounded-lg shadow-2xl"
                     style={{ width: 'auto', height: 'auto' }}
+                    crossOrigin="anonymous"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      console.error(`❌ Failed to load main slide ${currentSlide + 1}:`, data.images?.[currentSlide]);
+                      setImageLoadErrors(prev => new Set(Array.from(prev).concat([currentSlide])));
+                      target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMyMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNjAgMTgwQzE3Ny42NzMgMTgwIDE5MiAxOTQuMzI3IDE5MiAyMTJDMTkyIDIyOS42NzMgMTc3LjY3MyAyNDQgMTYwIDI0NEMxNDIuMzI3IDI0NCAxMjggMjI5LjY3MyAxMjggMjEyQzEyOCAxOTQuMzI3IDE0Mi4zMjcgMTgwIDE2MCAxODBaIiBmaWxsPSIjRDRE0RDE4Ii8+CjxwYXRoIGQ9Ik0xMjggMjQwSDE5MlYyNTZIMTI4VjI0MFoiIGZpbGw9IiNERERERDEiLz4KPHN2Zz4K';
+                    }}
                   />
                 </div>
                 
@@ -282,6 +304,17 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
                 {data.images.length > 1 && (
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm font-medium">
                     {currentSlide + 1} / {data.images.length}
+                  </div>
+                )}
+                
+                {/* Error Overlay */}
+                {imageLoadErrors.has(currentSlide) && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-red-50 rounded-lg z-10">
+                    <div className="text-center p-4">
+                      <p className="text-red-600 font-medium mb-2">Image failed to load</p>
+                      <p className="text-sm text-red-500 mb-2">{debugInfo}</p>
+                      <p className="text-xs text-gray-500">Check browser console for details</p>
+                    </div>
                   </div>
                 )}
               </div>
@@ -383,6 +416,8 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
+                          console.error(`❌ Failed to load slide ${currentSlide + 1}:`, data.images?.[currentSlide]);
+                          setImageLoadErrors(prev => new Set(Array.from(prev).concat([currentSlide])));
                           target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDMyMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNjAgMTgwQzE3Ny42NzMgMTgwIDE5MiAxOTQuMzI3IDE5MiAyMTJDMTkyIDIyOS42NzMgMTc3LjY3MyAyNDQgMTYwIDI0NEMxNDIuMzI3IDI0NCAxMjggMjI5LjY3MyAxMjggMjEyQzEyOCAxOTQuMzI3IDE0Mi4zMjcgMTgwIDE2MCAxODBaIiBmaWxsPSIjRDRE0RDE4Ii8+CjxwYXRoIGQ9Ik0xMjggMjQwSDE5MlYyNTZIMTI4VjI0MFoiIGZpbGw9IiNERERERDEiLz4KPHN2Zz4K';
                         }}
                       />
