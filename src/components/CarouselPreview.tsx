@@ -211,7 +211,18 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
 
   return (
     <div className="space-y-6">
-      {/* Success Message */}
+      {/* Debug Info - Remove after fixing */}
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 max-w-4xl mx-auto">
+        <h4 className="font-bold text-yellow-800 mb-2">Debug Info:</h4>
+        <p className="text-sm text-yellow-700">Images count: {data.images?.length || 0}</p>
+        <p className="text-sm text-yellow-700">Has HTML: {data.html ? 'Yes' : 'No'}</p>
+        <p className="text-sm text-yellow-700">Success: {data.success ? 'Yes' : 'No'}</p>
+        {data.images && data.images.length > 0 && (
+          <p className="text-xs text-yellow-600 mt-2 truncate">
+            First image: {data.images[0].substring(0, 50)}...
+          </p>
+        )}
+      </div>
       {showSuccessMessage && (
         <div className="bg-green-50 border border-green-200 rounded-xl p-4 max-w-2xl mx-auto animate-fade-in">
           <div className="flex items-center gap-3 text-green-800">
