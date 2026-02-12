@@ -7,6 +7,7 @@ import GeneratorPage from './pages/GeneratorPage';
 import Gallery from './components/Gallery';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import './index.css';
 import './App.css';
 import './components/Animations.css';
 

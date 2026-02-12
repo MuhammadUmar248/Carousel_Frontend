@@ -1,6 +1,6 @@
 /* Page Transition Animations */
 .page-transition {
-  animation: fadeInUp 0.8s ease-out;
+  animation: fadeInUp 0.8s ease-out !important;
 }
 
 @keyframes fadeInUp {
@@ -16,15 +16,15 @@
 
 /* Enhanced page animation for all pages */
 .page-transition * {
-  animation-delay: 0.1s;
+  animation-delay: 0.1s !important;
 }
 
 .page-transition h1, .page-transition h2, .page-transition h3 {
-  animation: slideInFromLeft 0.6s ease-out;
+  animation: slideInFromLeft 0.6s ease-out !important;
 }
 
 .page-transition .btn-animated, .page-transition button {
-  animation: slideInFromBottom 0.6s ease-out;
+  animation: slideInFromBottom 0.6s ease-out !important;
 }
 
 @keyframes slideInFromLeft {
@@ -51,71 +51,71 @@
 
 /* Smooth scrolling for anchor links */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: smooth !important;
 }
 
 /* Navigation link animations */
 .nav-link {
-  position: relative;
-  transition: all 0.3s ease;
+  position: relative !important;
+  transition: all 0.3s ease !important;
 }
 
 .nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(to right, #9333ea, #ec4899);
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
+  content: '' !important;
+  position: absolute !important;
+  bottom: -2px !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(to right, #9333ea, #ec4899) !important;
+  transition: all 0.3s ease !important;
+  transform: translateX(-50%) !important;
 }
 
 .nav-link:hover::after {
-  width: 100%;
+  width: 100% !important;
 }
 
 /* Button animations */
 .btn-animated {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
 }
 
 .btn-animated::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  transition: width 0.6s, height 0.6s !important;
 }
 
 .btn-animated:hover::before {
-  width: 300px;
-  height: 300px;
+  width: 300px !important;
+  height: 300px !important;
 }
 
 /* Section animations */
 .section-animate {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.6s ease;
+  opacity: 0 !important;
+  transform: translateY(20px) !important;
+  transition: all 0.6s ease !important;
 }
 
 .section-animate.visible {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 /* Hero section animations */
 .hero-animate {
-  animation: heroFadeIn 1s ease-out;
+  animation: heroFadeIn 1s ease-out !important;
 }
 
 @keyframes heroFadeIn {
@@ -131,10 +131,10 @@ html {
 
 /* Card hover animations */
 .card-hover {
-  transition: all 0.3s ease;
+  transition: all 0.3s ease !important;
 }
 
 .card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
 }
