@@ -29,17 +29,41 @@ const GeneratorPage: React.FC = () => {
         throw new Error('No HTML content received from backend');
       }
 
-      // Try to convert HTML to images, but don't fail if it doesn't work
+      // Try to convert HTML to images with retries
       let images: string[] = [];
-      try {
-        console.log('🖼️ Step 2: Converting HTML to images...');
-        const imageResponse = await convertHtmlToImages(htmlResponse.html);
-        images = imageResponse.images || [];
-        console.log('✅ Image conversion successful:', images.length, 'slides');
-      } catch (imageError) {
-        console.warn('⚠️ Image conversion failed, proceeding with HTML only:', imageError);
-        // Don't throw the error, just continue without images
-        images = [];
+      let imageConversionError: Error | null = null;
+      const maxRetries = 2;
+      
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        if (attempt > 0) {
+          console.log(`🔄 Retry attempt ${attempt}/${maxRetries}...`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retry
+        }
+        
+        try {
+          console.log(`🖼️ Step 2: Converting HTML to images (attempt ${attempt + 1})...`);
+          const imageResponse = await convertHtmlToImages(htmlResponse.html);
+          images = imageResponse.images || [];
+          
+          if (images.length > 0) {
+            console.log('✅ Image conversion successful:', images.length, 'slides');
+            imageConversionError = null;
+            break; // Success - exit retry loop
+          } else {
+            console.warn('⚠️ Image conversion returned empty array');
+            imageConversionError = new Error('Image conversion returned empty results');
+          }
+        } catch (err) {
+          console.warn(`⚠️ Image conversion attempt ${attempt + 1} failed:`, err);
+          imageConversionError = err instanceof Error ? err : new Error('Image conversion failed');
+          images = [];
+        }
+      }
+      
+      // If all retries failed, show warning but don't fail entirely
+      if (images.length === 0 && imageConversionError) {
+        console.error('❌ Image conversion failed after all retries:', imageConversionError);
+        setError(`Warning: Images failed to convert. ${imageConversionError.message}. HTML was saved but carousel slides won't display properly.`);
       }
       
       // Combine both responses
@@ -48,11 +72,14 @@ const GeneratorPage: React.FC = () => {
         images: images,
         success: true
       };
-      console.log('🎉 Final combined response:', combinedResponse);
+      console.log('🎉 Final combined response:', {
+        ...combinedResponse,
+        html: combinedResponse.html?.substring(0, 100) + '...'
+      });
       
       // Save to localStorage
       try {
-        console.log('💾 Saving to localStorage...');
+        console.log('💾 Saving to localStorage with', images.length, 'images...');
         storageService.saveCarousel(data, combinedResponse);
         console.log('✅ Saved to localStorage successfully');
       } catch (error) {
