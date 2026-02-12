@@ -339,7 +339,7 @@ const CarouselPreview: React.FC<CarouselPreviewProps> = ({ data, showSuccess = f
                     srcDoc={data.html}
                     className="w-full h-full bg-white rounded-lg shadow-2xl border-0"
                     title="Carousel Preview"
-                    sandbox="allow-same-origin"
+                    sandbox="allow-same-origin allow-scripts"
                     style={{ 
                       transform: 'scale(0.8)', 
                       transformOrigin: 'top center',
