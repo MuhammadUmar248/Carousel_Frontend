@@ -16,6 +16,48 @@ code {
     monospace;
 }
 
+/* Critical gradient backgrounds for production */
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, #faf5ff, #fdf2f8, #eff6ff) !important;
+}
+
+.from-purple-50 {
+  --tw-gradient-from: #faf5ff !important;
+}
+
+.via-pink-50 {
+  --tw-gradient-via: #fdf2f8 !important;
+}
+
+.to-blue-50 {
+  --tw-gradient-to: #eff6ff !important;
+}
+
+.from-purple-500 {
+  --tw-gradient-from: #a855f7 !important;
+}
+
+.to-pink-500 {
+  --tw-gradient-to: #ec4899 !important;
+}
+
+.from-purple-600 {
+  --tw-gradient-from: #9333ea !important;
+}
+
+.to-pink-600 {
+  --tw-gradient-to: #db2777 !important;
+}
+
+.text-transparent {
+  color: transparent !important;
+}
+
+.bg-clip-text {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
 /* Critical animations for production */
 .page-transition {
   animation: fadeInUp 0.8s ease-out !important;
@@ -99,4 +141,116 @@ code {
 .card-hover:hover {
   transform: translateY(-5px) !important;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Critical button styles */
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to)) !important;
+}
+
+.rounded-2xl {
+  border-radius: 1rem !important;
+}
+
+.shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.text-white {
+  color: white !important;
+}
+
+/* Text styles */
+.text-5xl {
+  font-size: 3rem !important;
+  line-height: 1 !important;
+}
+
+.text-6xl {
+  font-size: 3.75rem !important;
+  line-height: 1 !important;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.text-gray-900 {
+  color: #111827 !important;
+}
+
+.text-gray-600 {
+  color: #4b5563 !important;
+}
+
+.text-xl {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mb-8 {
+  margin-bottom: 2rem !important;
+}
+
+.max-w-2xl {
+  max-width: 42rem !important;
+}
+
+.mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.block {
+  display: block !important;
+}
+
+/* Flexbox styles */
+.flex {
+  display: flex !important;
+}
+
+.justify-center {
+  justify-content: center !important;
+}
+
+.items-center {
+  align-items: center !important;
+}
+
+/* Padding styles */
+.p-4 {
+  padding: 1rem !important;
+}
+
+.py-24 {
+  padding-top: 6rem !important;
+  padding-bottom: 6rem !important;
+}
+
+.px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+/* Container styles */
+.max-w-7xl {
+  max-width: 80rem !important;
+}
+
+/* Icon styles */
+.w-12 {
+  width: 3rem !important;
+}
+
+.h-12 {
+  height: 3rem !important;
 }
